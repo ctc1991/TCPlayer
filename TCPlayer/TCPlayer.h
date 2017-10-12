@@ -27,7 +27,10 @@
 - (void)player:(TCPlayer *)player didChangeVolume:(CGFloat)volume;
 /// 上下滑动改变亮度 默认屏幕左边区域
 - (void)player:(TCPlayer *)player didChangeBrightness:(CGFloat)brightness;
-
+/// 播放器播放状态
+- (void)player:(TCPlayer *)player isPlaying:(BOOL)isPlaying;
+/// 播放结束
+- (void)playerDidPlayToEndTime:(TCPlayer *)player;
 @end
 
 // notifications                                                                                description
@@ -81,6 +84,7 @@ typedef NS_ENUM(NSInteger, TCPlayerTouchMode) {
 @property (nonatomic, weak) id<TCPlayerDelegate>delegate;
 /** 上下滑动屏幕左半边区域改变音量大小 默认是在右边 NO */
 @property (nonatomic, assign) BOOL slideVolumnOnTheLeft;
+@property (nonatomic, assign, readonly) BOOL isPlaying;
 
 /**
  播放在线视频
@@ -99,6 +103,10 @@ typedef NS_ENUM(NSInteger, TCPlayerTouchMode) {
 - (void)refresh;
 /** 定位播放 */
 - (void)playAtPercent:(CGFloat)percent;
+/** 屏幕转向 */
+- (void)turnOrientation:(UIInterfaceOrientation)orientation;
+/** 添加一个撑满的视图 */
+- (void)addFillSubview:(UIView *)subview;
 
 @end
 

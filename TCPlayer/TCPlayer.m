@@ -9,6 +9,12 @@
 #import "TCPlayer.h"
 #import <MediaPlayer/MediaPlayer.h>
 
+#ifndef __OPTIMIZE__
+#define log(...) NSLog(__VA_ARGS__)
+#else
+#define log(...) {}
+#endif
+
 NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
 
 @interface TCPlayer ()
@@ -102,6 +108,7 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
 - (void)dealloc {
     [self removeObservers];
     [self removeNotifications];
+    log(@"%@ dealloc.",self.class);
 }
 
 - (void)play {
@@ -124,8 +131,13 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
     }];
 }
 
+- (BOOL)isPlaying {
+    return @(self.player.rate).boolValue;
+}
+
 - (void)refresh {
     [self play:self.currentUrl];
+    [self play];
 }
 
 - (void)playAtPercent:(CGFloat)percent {
@@ -137,6 +149,17 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
         if (finished) {
         }
     }];
+}
+
+- (void)turnOrientation:(UIInterfaceOrientation)orientation {
+    [UIDevice.currentDevice setValue:@(orientation) forKey:@"orientation"];
+}
+
+- (void)addFillSubview:(UIView *)subview {
+    [self addSubview:subview];
+    [subview setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
 }
 
 - (void)addObservers {
@@ -172,7 +195,7 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
         switch (self.player.currentItem.status) {
             case AVPlayerItemStatusReadyToPlay:
                 self.status = TCPlayerStatusReadyToPlay;
-                NSLog(@"准备播放");
+                log(@"准备播放");
                 self.total = CMTimeGetSeconds(self.player.currentItem.duration);
                 if ([_delegate respondsToSelector:@selector(player:didGetDuration:)]) {
                     [_delegate player:self didGetDuration:self.total];
@@ -185,19 +208,21 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
                 }
                 break;
             default:
-                NSLog(@"无法播放：%@",object);
+                log(@"无法播放：%@",object);
                 self.status = TCPlayerStatusFailed;
                 break;
         }
     }
     if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
-        NSLog(@"缓冲不足暂停了");
+        log(@"缓冲不足暂停了");
     }
     if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-        NSLog(@"缓冲达到可播放程度了");
+        log(@"缓冲达到可播放程度了");
     }
     if ([keyPath isEqualToString:@"rate"]) {
-        NSLog(@"%f",self.player.rate);
+        if ([_delegate respondsToSelector:@selector(player:isPlaying:)]) {
+            [_delegate player:self isPlaying:[@(self.player.rate) boolValue]];
+        }
     }
     if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
         if (self.type == TCPlayerTypeVideo) {
@@ -241,31 +266,33 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
 #pragma mark - NotificationActions - Method
 
 - (void)AVPlayerItemTimeJumpedNotificationAction:(NSNotification *)note {
-    //    NSLog(@"播放时间跳跃：%@",note.object);
+    //    log(@"播放时间跳跃：%@",note.object);
 }
 
 - (void)AVPlayerItemDidPlayToEndTimeNotificationAction:(NSNotification *)note {
-    NSLog(@"播放结束：%@",note.object);
+    if ([_delegate respondsToSelector:@selector(playerDidPlayToEndTime:)]) {
+        [_delegate playerDidPlayToEndTime:self];
+    }
 }
 
 - (void)AVPlayerItemFailedToPlayToEndTimeNotificationAction:(NSNotification *)note {
-    NSLog(@"没能播放到最后：%@",note.object);
+    log(@"没能播放到最后：%@",note.object);
 }
 
 - (void)AVPlayerItemPlaybackStalledNotificationAction:(NSNotification *)note {
-    NSLog(@"媒体资源没有及时加载，无法继续播放。：%@",note.object);
+    log(@"媒体资源没有及时加载，无法继续播放。：%@",note.object);
 }
 
 - (void)AVPlayerItemNewAccessLogEntryNotificationAction:(NSNotification *)note {
-    //    NSLog(@"添加新的访问日志条目：%@",note.object);
+    //    log(@"添加新的访问日志条目：%@",note.object);
 }
 
 - (void)AVPlayerItemNewErrorLogEntryNotificationAction:(NSNotification *)note {
-    //    NSLog(@"添加新的错误日志条目：%@",note.object);
+    //    log(@"添加新的错误日志条目：%@",note.object);
 }
 
 - (void)AVPlayerItemFailedToPlayToEndTimeErrorKeyAction:(NSNotification *)note {
-    NSLog(@"没能播放到最后的错误key：%@",note.object);
+    log(@"没能播放到最后的错误key：%@",note.object);
 }
 
 @end

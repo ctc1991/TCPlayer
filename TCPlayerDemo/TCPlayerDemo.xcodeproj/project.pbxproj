@@ -13,6 +13,8 @@
 		1891E7A51F8C6BE500BA1E06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1891E7A41F8C6BE500BA1E06 /* Assets.xcassets */; };
 		1891E7A81F8C6BE500BA1E06 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1891E7A61F8C6BE500BA1E06 /* LaunchScreen.storyboard */; };
 		1891E7B51F8C6C3300BA1E06 /* TCPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 1891E7B41F8C6C3300BA1E06 /* TCPlayer.m */; };
+		18CE52341F8F40B4009F2654 /* VcWithUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CE52331F8F40B4009F2654 /* VcWithUI.swift */; };
+		18CE52361F8F40BE009F2654 /* TCPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CE52351F8F40BE009F2654 /* TCPlayerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		1891E7B31F8C6C3300BA1E06 /* TCPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCPlayer.h; sourceTree = "<group>"; };
 		1891E7B41F8C6C3300BA1E06 /* TCPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCPlayer.m; sourceTree = "<group>"; };
 		1891E7B61F8C6C4A00BA1E06 /* TCPlayerDemo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TCPlayerDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		18CE52331F8F40B4009F2654 /* VcWithUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VcWithUI.swift; sourceTree = "<group>"; };
+		18CE52351F8F40BE009F2654 /* TCPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPlayerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +66,8 @@
 				1891E7B61F8C6C4A00BA1E06 /* TCPlayerDemo-Bridging-Header.h */,
 				1891E79D1F8C6BE500BA1E06 /* AppDelegate.swift */,
 				1891E79F1F8C6BE500BA1E06 /* ViewController.swift */,
+				18CE52351F8F40BE009F2654 /* TCPlayerView.swift */,
+				18CE52331F8F40B4009F2654 /* VcWithUI.swift */,
 				1891E7A11F8C6BE500BA1E06 /* Main.storyboard */,
 				1891E7A41F8C6BE500BA1E06 /* Assets.xcassets */,
 				1891E7A61F8C6BE500BA1E06 /* LaunchScreen.storyboard */,
@@ -154,6 +160,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18CE52341F8F40B4009F2654 /* VcWithUI.swift in Sources */,
+				18CE52361F8F40BE009F2654 /* TCPlayerView.swift in Sources */,
 				1891E7A01F8C6BE500BA1E06 /* ViewController.swift in Sources */,
 				1891E7B51F8C6C3300BA1E06 /* TCPlayer.m in Sources */,
 				1891E79E1F8C6BE500BA1E06 /* AppDelegate.swift in Sources */,

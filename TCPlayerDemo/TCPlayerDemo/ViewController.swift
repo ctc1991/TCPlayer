@@ -1,72 +1,175 @@
 //
 //  ViewController.swift
-//  TCPlayerDemo
+//  TCPlayer_swift
 //
-//  Created by Tech on 2017/10/10.
+//  Created by Tech on 2017/5/26.
 //  Copyright © 2017年 ctc. All rights reserved.
 //
 
 import UIKit
+import AVFoundation
 
-let url = "http://7xpk28.com1.z0.glb.clouddn.com/%5BONE%20PUNCH%20MAN%5D%5B720P%5D-10.mp4"
-let url2 = "http://dl.weshineapp.com/gif/20170928/88e0a3126feedb6b11aa6e6385e76650.mp4"
-let url3 = "http://pl-ali.youku.com/playlist/m3u8?vid=XMzA0MTcyMzAwNA==&sid=049077601582712e5c7c0&ctype=12&ts=1490776017&type=hd"
-let url4 = "http://static.cheshipin.tv/lgKceJY6i9lmItgZH-h4jspX4wVA"
-let url5 = "http://pl-hls8.live.panda.tv/live_panda/92d768563027d708b0cb81793d93b3bf_small.m3u8"
-let xxx = "https://cdn2e-videos2.yjcontentdelivery.com/5/8/58d9aa188577cd0dbe0dde38691c08c31490671223-640-360-600-h264.mp4?validfrom=1507566733&validto=1507739533&rate=115200&hash=%2Fpsv10DpBYmclw0e0wDa7kJ8rUU%3D"
+let test_live = "http://pl-hls11.live.panda.tv/live_panda/d773d6c71b8310e68a4d4c45c66c0b4d_small.m3u8"
+let test_url1 =  "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4"
+let test_url2 = "http://pl-ali.youku.com/playlist/m3u8?vid=XMjc4MTYwODI2OA==&sid=049077601582712e5c7c0&ctype=12&ts=1490776017&type=hd3"
+let test_url3 = "http://101.227.216.142/vcloud1026.tc.qq.com/1026_028e3447c219459087df0064e29751bd.f0.mp4?vkey=BC8597116B9A2A491A785B3CAAD337F224B23EE5DADD9910B4544451EF8DAE27040330626D21C06BB2AAEF7A3B2BA271CDED1AC6746DCECF6A2D433BBE4140674CA4A8920C6E82522ABFAE69CA5A67F6AA2A9750E1BFCB65&sha=1b9225451824f7492aeb80316abfec0c78c12728"
+let test_url4 = "http://ac-i6ivdmqk.clouddn.com/2aab83d40181512112a4.mp3"
+let test_url5 = "http://pl-ali.youku.com/playlist/m3u8?vid=XMjQ4MTMxNjk4MA==&sid=049077601582712e5c7c0&ctype=12&ts=1490776017&type=mp4"
 
-class ViewController: UIViewController,TCPlayerDelegate,UITextFieldDelegate {
-
+class ViewController: UIViewController,TCPlayerDelegate {
+    
+    @IBOutlet weak var iv: UIImageView!
+    @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var playPercentLbl: UILabel!
+    @IBOutlet weak var bufferedPercentLbl: UILabel!
+    @IBOutlet weak var playLbl: UILabel!
+    @IBOutlet weak var totalLbl: UILabel!
+    @IBOutlet weak var pv: UIProgressView!
     @IBOutlet weak var player: TCPlayer!
     
+    var gif = [UIImage]()
+    
+    @IBOutlet weak var pv2: UIProgressView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        player.backgroundColor = UIColor.black
-        player.play(url4)
+        
+        navigationController?.navigationBar.isHidden = true
+        
         player.delegate = self
-        let playerView = TCPlayerView()
-        player.addSubview(playerView)
+        player.play(test_url1)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print(player.constraints)
+    }
+    
+    func reset() {
+        pv.setProgress(0, animated: false)
+        pv2.setProgress(0, animated: false)
+        slider.setValue(0, animated: false)
+        playPercentLbl.text = "0.00%"
+        bufferedPercentLbl.text = "0.00%"
+    }
+
+    @IBAction func changeA(_ sender: Any) {
+        reset()
+        player.play(test_url1)
+    }
+    
+    @IBAction func changeB(_ sender: Any) {
+        reset()
+        player.play(test_url2)
+    }
+    
+    @IBAction func replay(_ sender: Any) {
+        player.replay()
+    }
+    
+    @IBAction func refresh(_ sender: Any) {
+        reset()
+        player.refresh()
     }
     
     @IBAction func play(_ sender: UIButton) {
         player.play()
     }
     
+    @IBAction func getImg(_ sender: Any) {
+//        iv.image = player.screenshot()
+    }
+    
+    @IBAction func gifMaker(_ sender: UIButton) {
+//        if sender.isSelected {
+//            return
+//        }
+//        sender.isSelected = true
+//        gif.removeAll()
+//        
+//        player.screenshots({ (imgs) in
+//            self.iv.animationImages = imgs
+//            self.iv.animationDuration = 3
+//            self.iv.startAnimating()
+//            sender.isSelected = false
+//        })
+
+  
+        
+//        Timer.scheduledTimer(withTimeInterval: 1/24, repeats: true, block: { [weak self] timer in
+//            debugPrint("get a new gif")
+//            let img = self?.player.screenshot()
+//        
+//            
+//      
+//            
+//            
+//            self?.gif.append(img!)
+//            if self?.gif.count == 24*3 {
+//                self?.iv.animationImages = self?.gif
+//                self?.iv.animationDuration = 3
+//                self?.iv.startAnimating()
+//                sender.isSelected = false
+//                timer.invalidate()
+//            }
+//            if self == nil {
+//                timer.invalidate()
+//            }
+//        }).fire()
+    }
+    
     @IBAction func pause(_ sender: UIButton) {
         player.pause()
     }
-
-    @IBAction func replay(_ sender: UIButton) {
-        player.replay()
-        player.frame = CGRect(x: 0, y: 0, width: 375, height: 375)
-        player.layer.frame = CGRect(x: 0, y: 0, width: 200, height: 375)
+    
+    @IBAction func videoSliderChangeValue(_ sender: UISlider) {
+        print(sender.value)
+        player.play(atPercent: CGFloat(sender.value))
+//        iv.image = player.screenshot(sender.value)
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+    @IBAction func zoom(_ sender: Any) {
+        if UIDevice.current.orientation == .portrait {
+            player.turn(.landscapeRight)
+        } else {
+            player.turn(.portrait)
+        }
     }
+
+    @IBAction func pop(_ sender: Any) {
+        _ = navigationController?.popViewController(animated: true)
+    }
+    deinit {
+        debugPrint(self.classForCoder)
+    }
+    
+    func timeFormatter(_ second: CGFloat) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(second))
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone(secondsFromGMT: +0)
+        if second/3600 >= 1 {
+            formatter.dateFormat = "HH:mm:ss"
+        } else {
+            formatter.dateFormat = "mm:ss"
+        }
+        return formatter.string(from: date)
+    }
+    
     
     // MARK: TCPlayerDelegate
     func player(_ player: TCPlayer!, didBuffer buffer: CGFloat) {
-        print("buffer:\(buffer)")
+        pv.setProgress(Float(buffer), animated: true)
+        bufferedPercentLbl.text = String(format: "%.2f%%", buffer*100)
     }
     
     func player(_ player: TCPlayer!, didGetDuration duration: CGFloat) {
-        print("duration:\(duration)")
+        totalLbl.text = timeFormatter(duration)
     }
     
     func player(_ player: TCPlayer!, didPlay progress: CGFloat, current: CGFloat) {
-        print("progress:\(progress) current:\(current)")
+        playLbl.text = timeFormatter(current)
+        pv2.setProgress(Float(progress), animated: true)
+        playPercentLbl.text = String(format: "%.2f%%", progress*100)
+        slider.setValue(Float(progress), animated: true)
     }
-    
-    func player(_ player: TCPlayer!, willJumpProgress progress: CGFloat) {
-        print("willJumpProgress:\(progress)")
-    }
-    
-    func player(_ player: TCPlayer!, didJumpProgress progress: CGFloat) {
-        print("didJumpProgress:\(progress)")
-    }
-    
     
 }
 
