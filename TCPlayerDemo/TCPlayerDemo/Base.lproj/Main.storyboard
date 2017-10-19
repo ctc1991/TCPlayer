@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Vc-->
         <scene sceneID="wPQ-R6-rcS">
             <objects>
-                <viewController id="rQn-qk-iCD" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="Vc" id="rQn-qk-iCD" customClass="Vc" customModule="TCPlayerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="nE9-Yo-POm"/>
                         <viewControllerLayoutGuide type="bottom" id="xRT-Ya-6d0"/>
@@ -241,6 +241,27 @@
                                     <action selector="gifMaker:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KFd-LG-BKu"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PIv-gE-FMa">
+                                <rect key="frame" x="176" y="366" width="54" height="30"/>
+                                <state key="normal" title="开始GIF"/>
+                                <connections>
+                                    <action selector="startGif:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hbn-hB-oC1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i9z-XB-dy0">
+                                <rect key="frame" x="244" y="366" width="54" height="30"/>
+                                <state key="normal" title="停止GIF"/>
+                                <connections>
+                                    <action selector="stopGif:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vKA-Go-yyp"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aaG-3c-uRI">
+                                <rect key="frame" x="176" y="392" width="54" height="30"/>
+                                <state key="normal" title="取消GIF"/>
+                                <connections>
+                                    <action selector="cancelGif:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Rgb-af-YlT"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -266,11 +287,14 @@
                             <constraint firstItem="SQS-mX-Q5n" firstAttribute="leading" secondItem="hae-sC-1J1" secondAttribute="leading" id="WZj-FN-FMv"/>
                             <constraint firstItem="j8J-e9-lCk" firstAttribute="centerY" secondItem="Xuo-Fv-xdY" secondAttribute="centerY" id="XZm-Ze-ZkR"/>
                             <constraint firstItem="hae-sC-1J1" firstAttribute="leading" secondItem="dwK-f9-SHB" secondAttribute="leading" id="Y8c-RB-SDG"/>
+                            <constraint firstItem="aaG-3c-uRI" firstAttribute="top" secondItem="PIv-gE-FMa" secondAttribute="bottom" constant="-4" id="YEU-TF-Lrt"/>
                             <constraint firstItem="dwK-f9-SHB" firstAttribute="top" secondItem="7Y1-KF-i72" secondAttribute="bottom" constant="12" id="YjK-gs-VVi"/>
                             <constraint firstItem="RcO-LZ-cpI" firstAttribute="centerX" secondItem="fLG-Cx-z0f" secondAttribute="centerX" id="Zt1-aC-slm"/>
                             <constraint firstItem="DzB-iT-c1l" firstAttribute="centerY" secondItem="CnK-nY-fRh" secondAttribute="centerY" id="a3T-eg-c9E"/>
                             <constraint firstItem="fLG-Cx-z0f" firstAttribute="centerY" secondItem="HbL-tX-s7V" secondAttribute="centerY" id="bFs-Eq-qIg"/>
                             <constraint firstItem="Mpr-LC-D3x" firstAttribute="centerY" secondItem="SQS-mX-Q5n" secondAttribute="centerY" id="bXs-et-l1E"/>
+                            <constraint firstItem="PIv-gE-FMa" firstAttribute="centerY" secondItem="fLG-Cx-z0f" secondAttribute="centerY" id="dCB-Nv-Aew"/>
+                            <constraint firstItem="PIv-gE-FMa" firstAttribute="leading" secondItem="fLG-Cx-z0f" secondAttribute="trailing" constant="16" id="eUi-rW-izA"/>
                             <constraint firstItem="Xuo-Fv-xdY" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="gkj-fg-lBk"/>
                             <constraint firstItem="XdE-Lw-orc" firstAttribute="leading" secondItem="oTU-wo-cFd" secondAttribute="trailing" constant="22" id="gsM-yF-yGg"/>
                             <constraint firstItem="mwa-oD-uEy" firstAttribute="leading" secondItem="cco-76-cAO" secondAttribute="leading" id="hF0-08-hBQ"/>
@@ -281,14 +305,17 @@
                             <constraint firstItem="CnK-nY-fRh" firstAttribute="leading" secondItem="Xuo-Fv-xdY" secondAttribute="leading" id="mk8-ip-n9E"/>
                             <constraint firstItem="02l-bh-rJc" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="nSd-zb-fJa"/>
                             <constraint firstItem="RcO-LZ-cpI" firstAttribute="centerY" secondItem="XdE-Lw-orc" secondAttribute="centerY" id="nUD-4n-z9z"/>
+                            <constraint firstItem="i9z-XB-dy0" firstAttribute="centerY" secondItem="PIv-gE-FMa" secondAttribute="centerY" id="nvi-Jm-agO"/>
                             <constraint firstItem="YZj-Pp-gNy" firstAttribute="leading" secondItem="uD2-u4-Kqs" secondAttribute="leading" id="oHU-5Z-PZt"/>
                             <constraint firstItem="XrD-3r-waq" firstAttribute="leading" secondItem="SQS-mX-Q5n" secondAttribute="leading" id="oMw-p6-clq"/>
                             <constraint firstItem="fLG-Cx-z0f" firstAttribute="leading" secondItem="HbL-tX-s7V" secondAttribute="trailing" constant="25" id="qUY-hI-NNs"/>
+                            <constraint firstItem="i9z-XB-dy0" firstAttribute="leading" secondItem="PIv-gE-FMa" secondAttribute="trailing" constant="14" id="sPC-gE-dBf"/>
                             <constraint firstItem="YZj-Pp-gNy" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="sVK-7S-aaW"/>
                             <constraint firstItem="DzB-iT-c1l" firstAttribute="leading" secondItem="j8J-e9-lCk" secondAttribute="leading" id="suu-C7-YfS"/>
                             <constraint firstItem="oTU-wo-cFd" firstAttribute="leading" secondItem="CnK-nY-fRh" secondAttribute="leading" id="tiB-7J-BGV"/>
                             <constraint firstItem="Xuo-Fv-xdY" firstAttribute="top" secondItem="02l-bh-rJc" secondAttribute="bottom" constant="20" id="uTE-yS-hA0"/>
                             <constraint firstItem="hae-sC-1J1" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wJS-KN-mHe"/>
+                            <constraint firstItem="aaG-3c-uRI" firstAttribute="centerX" secondItem="PIv-gE-FMa" secondAttribute="centerX" id="xdc-Hr-vfo"/>
                             <constraint firstItem="CnK-nY-fRh" firstAttribute="top" secondItem="Xuo-Fv-xdY" secondAttribute="bottom" constant="13" id="yTg-gS-myR"/>
                             <constraint firstItem="0YD-au-OkG" firstAttribute="top" secondItem="oTU-wo-cFd" secondAttribute="bottom" constant="8" id="yb8-0N-voY"/>
                             <constraint firstItem="mwa-oD-uEy" firstAttribute="centerY" secondItem="7Y1-KF-i72" secondAttribute="centerY" id="zLk-JL-Yjo"/>
@@ -311,10 +338,10 @@
             </objects>
             <point key="canvasLocation" x="928.79999999999995" y="56.221889055472268"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navi Vc-->
         <scene sceneID="bNR-Df-Zzi">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dnk-3c-sM9" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NaviVc" automaticallyAdjustsScrollViewInsets="NO" id="dnk-3c-sM9" customClass="NaviVc" customModule="TCPlayerDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="11y-TE-edd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

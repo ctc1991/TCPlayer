@@ -50,7 +50,11 @@ class ViewController: UIViewController,TCPlayerDelegate {
         playPercentLbl.text = "0.00%"
         bufferedPercentLbl.text = "0.00%"
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+//        player.stopRecordingGif()
+    }
+    
     @IBAction func changeA(_ sender: Any) {
         reset()
         player.play(test_url1)
@@ -75,46 +79,69 @@ class ViewController: UIViewController,TCPlayerDelegate {
     }
     
     @IBAction func getImg(_ sender: Any) {
-//        iv.image = player.screenshot()
+        player.screenshot { (image) in
+            if image != nil {
+                self.iv.image = image
+            }
+        }
     }
     
     @IBAction func gifMaker(_ sender: UIButton) {
-//        if sender.isSelected {
-//            return
-//        }
-//        sender.isSelected = true
-//        gif.removeAll()
-//        
-//        player.screenshots({ (imgs) in
-//            self.iv.animationImages = imgs
-//            self.iv.animationDuration = 3
-//            self.iv.startAnimating()
-//            sender.isSelected = false
-//        })
-
-  
         
-//        Timer.scheduledTimer(withTimeInterval: 1/24, repeats: true, block: { [weak self] timer in
-//            debugPrint("get a new gif")
-//            let img = self?.player.screenshot()
-//        
-//            
-//      
-//            
-//            
-//            self?.gif.append(img!)
-//            if self?.gif.count == 24*3 {
-//                self?.iv.animationImages = self?.gif
-//                self?.iv.animationDuration = 3
-//                self?.iv.startAnimating()
-//                sender.isSelected = false
-//                timer.invalidate()
-//            }
-//            if self == nil {
-//                timer.invalidate()
-//            }
-//        }).fire()
+        //        if sender.isSelected {
+        //            return
+        //        }
+        //        sender.isSelected = true
+        //        gif.removeAll()
+        //
+        //        player.screenshots({ (imgs) in
+        //            self.iv.animationImages = imgs
+        //            self.iv.animationDuration = 3
+        //            self.iv.startAnimating()
+        //            sender.isSelected = false
+        //        })
+        
+        
+        
+        //        Timer.scheduledTimer(withTimeInterval: 1/24, repeats: true, block: { [weak self] timer in
+        //            debugPrint("get a new gif")
+        //            let img = self?.player.screenshot()
+        //
+        //
+        //
+        //
+        //
+        //            self?.gif.append(img!)
+        //            if self?.gif.count == 24*3 {
+        //                self?.iv.animationImages = self?.gif
+        //                self?.iv.animationDuration = 3
+        //                self?.iv.startAnimating()
+        //                sender.isSelected = false
+        //                timer.invalidate()
+        //            }
+        //            if self == nil {
+        //                timer.invalidate()
+        //            }
+        //        }).fire()
     }
+    
+    @IBAction func startGif(_ sender: UIButton) {
+//        player.startRecordingGif()
+    }
+    
+    @IBAction func cancelGif(_ sender: UIButton) {
+//        player.cancelRecordingGif()
+    }
+    
+    @IBAction func stopGif(_ sender: UIButton) {
+//        player.stopRecordingGif { (image) in
+//            if image != nil {
+//                self.iv.image = image
+//            }
+//        }
+    }
+    
+    var index = 0
     
     @IBAction func pause(_ sender: UIButton) {
         player.pause()
@@ -123,7 +150,7 @@ class ViewController: UIViewController,TCPlayerDelegate {
     @IBAction func videoSliderChangeValue(_ sender: UISlider) {
         print(sender.value)
         player.play(atPercent: CGFloat(sender.value))
-//        iv.image = player.screenshot(sender.value)
+        //        iv.image = player.screenshot(sender.value)
     }
     
     @IBAction func zoom(_ sender: Any) {
@@ -133,7 +160,7 @@ class ViewController: UIViewController,TCPlayerDelegate {
             player.turn(.portrait)
         }
     }
-
+    
     @IBAction func pop(_ sender: Any) {
         _ = navigationController?.popViewController(animated: true)
     }

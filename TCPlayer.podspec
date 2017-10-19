@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "TCPlayer"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "ctc's video player."
   s.description  = <<-DESC
   A player based on AVPlayer.

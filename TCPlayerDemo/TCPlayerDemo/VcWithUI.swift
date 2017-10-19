@@ -24,10 +24,10 @@ class VcWithUI: UIViewController {
         playerView = TCPlayerView()
         playerView.player = player
         player.addFillSubview(playerView)
-        playerView.frame = player.bounds
-        player.play()
-        
-
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .allButUpsideDown
     }
     
     deinit {

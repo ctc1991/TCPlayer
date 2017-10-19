@@ -13,6 +13,8 @@
 
 @protocol TCPlayerDelegate <NSObject>
 @optional
+/// 无法播放
+- (void)playerDidPlayFailed:(TCPlayer *)player;
 /// 缓冲进度
 - (void)player:(TCPlayer *)player didBuffer:(CGFloat)buffer;
 /// 当前播放的进度以及当前播放的秒数
@@ -75,6 +77,8 @@ typedef NS_ENUM(NSInteger, TCPlayerTouchMode) {
     TCPlayerTouchModeProgress
 };
 
+typedef void (^ScreenshotCompletion)(UIImage *image);
+
 @interface TCPlayer : UIView
 
 @property (nonatomic, assign) TCPlayerStatus status;
@@ -85,6 +89,8 @@ typedef NS_ENUM(NSInteger, TCPlayerTouchMode) {
 /** 上下滑动屏幕左半边区域改变音量大小 默认是在右边 NO */
 @property (nonatomic, assign) BOOL slideVolumnOnTheLeft;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
+/** 录制gif的每秒帧数 默认是8 */
+@property (nonatomic, assign) NSInteger gifFps;
 
 /**
  播放在线视频
@@ -107,6 +113,17 @@ typedef NS_ENUM(NSInteger, TCPlayerTouchMode) {
 - (void)turnOrientation:(UIInterfaceOrientation)orientation;
 /** 添加一个撑满的视图 */
 - (void)addFillSubview:(UIView *)subview;
+/** 截图 */
+- (void)screenshotWithCompletion:(ScreenshotCompletion)completion;
+
+// 暂时不支持GIF录制
+///** 开始录制Gif 请记得用stop或者cancel来关闭录制 不然会造成内存泄漏*/
+//- (void)startRecordingGif;
+///** 停止录制Gif */
+//- (void)stopRecordingGif;
+//- (void)stopRecordingGifWithCompletion:(ScreenshotCompletion)completion;
+///** 取消录制Gif */
+//- (void)cancelRecordingGif;
 
 @end
 

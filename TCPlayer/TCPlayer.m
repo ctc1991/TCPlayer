@@ -31,6 +31,12 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
 
 @property (nonatomic, strong) TCPlayerContentView *contentView;
 
+@property (nonatomic, strong) AVPlayerItemVideoOutput *videoOutput;
+
+@property (nonatomic, assign) NSTimer *gifStartTimer;
+
+@property (nonatomic, strong) NSMutableArray *timeDictionarys;
+
 @end
 
 @implementation TCPlayer
@@ -38,6 +44,9 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     self.contentView.backgroundColor = UIColor.clearColor;
+    for (UIView *view in self.contentView.subviews) {
+        [view setNeedsDisplay];
+    }
 }
 
 - (TCPlayerContentView *)contentView {
@@ -51,6 +60,13 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
     return _contentView;
 }
 
+- (NSMutableArray *)timeDictionarys {
+    if (!_timeDictionarys) {
+        _timeDictionarys = [NSMutableArray array];
+    }
+    return _timeDictionarys;
+}
+
 - (void)setDelegate:(id<TCPlayerDelegate>)delegate {
     _delegate = delegate;
     self.contentView.delegate = delegate;
@@ -62,6 +78,13 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
     } else {
         [super addSubview:view];
     }
+}
+
+- (NSInteger)gifFps {
+    if (_gifFps == 0) {
+        return 8;
+    }
+    return _gifFps;
 }
 
 + (Class)layerClass {
@@ -99,6 +122,8 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
     _currentUrl = url;
     NSURL *URL = [NSURL URLWithString:url];
     self.player = [AVPlayer playerWithURL:URL];
+    self.videoOutput = [AVPlayerItemVideoOutput new];
+    [self.player.currentItem addOutput:self.videoOutput];
     self.status = TCPlayerStatusLoading;
     self.type = TCPlayerTypeUnknown;
     [self addObservers];
@@ -162,6 +187,94 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[subview]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(subview)]];
 }
 
+- (void)screenshotWithCompletion:(ScreenshotCompletion)completion {
+    if (!self.player) {
+        completion(nil);
+        return;
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([self.videoOutput hasNewPixelBufferForItemTime:self.player.currentTime]) {
+            CVPixelBufferRef buffer = [self.videoOutput copyPixelBufferForItemTime:self.player.currentTime itemTimeForDisplay:nil];
+            CIImage *ciImage = [CIImage imageWithCVImageBuffer:buffer];
+            CIContext *temporaryContext = [CIContext contextWithOptions:nil];
+            CGImageRef cgImage = [temporaryContext createCGImage:ciImage fromRect:CGRectMake(0, 0, CVPixelBufferGetWidth(buffer), CVPixelBufferGetHeight(buffer))];
+            CVPixelBufferRelease(buffer);
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                completion([UIImage imageWithCGImage:cgImage]);
+            });
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                completion(nil);
+            });
+        }
+    });
+}
+
+- (UIImage *)screenshotWithTime:(CMTime)time {
+    if (!self.player) {
+        return nil;
+    }
+    if ([self.videoOutput hasNewPixelBufferForItemTime:time]) {
+        CVPixelBufferRef buffer = [self.videoOutput copyPixelBufferForItemTime:time itemTimeForDisplay:nil];
+        CIImage *ciImage = [CIImage imageWithCVImageBuffer:buffer];
+        CIContext *temporaryContext = [CIContext contextWithOptions:nil];
+        CGImageRef cgImage = [temporaryContext createCGImage:ciImage fromRect:CGRectMake(0, 0, CVPixelBufferGetWidth(buffer), CVPixelBufferGetHeight(buffer))];
+        CVPixelBufferRelease(buffer);
+        return [UIImage imageWithCGImage:cgImage];
+    }
+    log(@"没有缓存");
+    return nil;
+}
+
+- (void)startRecordingGif {
+    log(@"%f",1.0/self.gifFps);
+    self.gifStartTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/self.gifFps target:self selector:@selector(rceordingGif) userInfo:nil repeats:YES];
+    [self.gifStartTimer fire];
+}
+
+- (void)stopRecordingGif {
+    if (self.gifStartTimer) {
+        [self.gifStartTimer invalidate];
+    }
+    [self.timeDictionarys removeAllObjects];
+}
+
+- (void)stopRecordingGifWithCompletion:(ScreenshotCompletion)completion {
+    if (self.gifStartTimer) {
+        [self.gifStartTimer invalidate];
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSMutableArray *images = [NSMutableArray array];
+        for (NSValue *value in self.timeDictionarys) {
+            CMTime time = [value CMTimeValue];
+            UIImage *img = [self screenshotWithTime:time];
+            if (img) {
+                [images addObject:img];
+            }
+        }
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            UIImage *image = [UIImage animatedImageWithImages:images duration:1.0/self.gifFps * images.count];
+            completion(image);
+            [self.timeDictionarys removeAllObjects];
+        });
+    });
+}
+
+- (void)cancelRecordingGif {
+    if (self.gifStartTimer) {
+        [self.gifStartTimer invalidate];
+    }
+    [self.timeDictionarys removeAllObjects];
+}
+
+- (void)rceordingGif {
+    [self saveCurrenttime:self.player.currentTime];
+}
+
+- (void)saveCurrenttime:(CMTime)time {
+    [self.timeDictionarys addObject:[NSValue valueWithCMTime:time]];
+}
+
 - (void)addObservers {
     for (NSString *keyPath in self.keyPaths) {
         [self.player.currentItem addObserver:self forKeyPath:keyPath options:NSKeyValueObservingOptionNew context:nil];
@@ -210,6 +323,9 @@ NSString *const TCPlayerDidChangeBrightness = @"TCPlayerDidChangeBrightness";
             default:
                 log(@"无法播放：%@",object);
                 self.status = TCPlayerStatusFailed;
+                if ([_delegate respondsToSelector:@selector(playerDidPlayFailed:)]) {
+                    [_delegate playerDidPlayFailed:self];
+                }
                 break;
         }
     }
